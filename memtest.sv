@@ -454,7 +454,7 @@ end
 
 
 ///////////////////////////////////////////////////////////////////
-assign SDRAM_CKE = 1;
+assign SDRAM2_CKE = 1;
 
 reg reset = 0;
 always @(posedge clk_ram) begin
@@ -477,17 +477,17 @@ tester my_memtst
 	.chip(sdram_chip),
 	.passcount(passcount),
 	.failcount(failcount),
-	.DRAM_CLK(SDRAM_CLK),
-	.DRAM_DQ(SDRAM_DQ),
-	.DRAM_ADDR(SDRAM_A),
-	.DRAM_LDQM(SDRAM_DQML),
-	.DRAM_UDQM(SDRAM_DQMH),
-	.DRAM_WE_N(SDRAM_nWE),
-	.DRAM_CS_N(SDRAM_nCS),
-	.DRAM_RAS_N(SDRAM_nRAS),
-	.DRAM_CAS_N(SDRAM_nCAS),
-	.DRAM_BA_0(SDRAM_BA[0]),
-	.DRAM_BA_1(SDRAM_BA[1])
+	.DRAM_CLK(SDRAM2_CLK),
+	.DRAM_DQ(SDRAM2_DQ),
+	.DRAM_ADDR(SDRAM2_A),
+	.DRAM_LDQM(SDRAM2_DQML),
+	.DRAM_UDQM(SDRAM2_DQMH),
+	.DRAM_WE_N(SDRAM2_nWE),
+	.DRAM_CS_N(SDRAM2_nCS),
+	.DRAM_RAS_N(SDRAM2_nRAS),
+	.DRAM_CAS_N(SDRAM2_nCAS),
+	.DRAM_BA_0(SDRAM2_BA[0]),
+	.DRAM_BA_1(SDRAM2_BA[1])
 );
 
 
