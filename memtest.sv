@@ -454,7 +454,7 @@ end
 
 
 ///////////////////////////////////////////////////////////////////
-assign SDRAM2_CKE = 1;
+assign SDRAM_CKE = 1;
 
 reg reset = 0;
 always @(posedge clk_ram) begin
