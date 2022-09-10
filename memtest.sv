@@ -194,13 +194,14 @@ assign BUTTONS   = 0;
 wire [31:0] status;
 wire  [1:0] buttons;
 
-`include "build_id.v" 
-localparam CONF_STR = 
+`include "build_id.v"
+localparam CONF_STR =
 {
 	"MEMTEST;;",
+	"d1T0O[2],SDRAM,Primary,Secondary;",
 	"J1, Reset Freq, Reset Test, Switch IC;",
-    "jn, A, Start, B;",
-    "jp, B, Start, A;",
+	"jn, A, Start, B;",
+	"jp, B, Start, A;",
 	"V,v",`BUILD_DATE
 };
 
@@ -208,6 +209,7 @@ reg  [10:0] ps2_key;
 wire [15:0] joystick_0;
 wire  [1:0] sdram_sz;
 reg   [1:0] sdram_chip = 2'h0;
+wire        module_sel = status[2];
 
 hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 (
@@ -216,6 +218,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
 
 	.conf_str(CONF_STR),
 	.status(status),
+	.status_menumask(SDRAM2_EN),
 	.buttons(buttons),
 	.sdram_sz(sdram_sz),
 
@@ -443,7 +446,7 @@ always @(posedge CLK_50M) begin
 		recfg <= 1;
 		pos <= pos + 1'd1;
 	end
-	
+
 	if(status[0] | buttons[1]) begin
 		recfg <= 1;
 		pos <= 0;
@@ -477,17 +480,17 @@ tester my_memtst
 	.chip(sdram_chip),
 	.passcount(passcount),
 	.failcount(failcount),
-	.DRAM_CLK(SDRAM_CLK),
-	.DRAM_DQ(SDRAM_DQ),
-	.DRAM_ADDR(SDRAM_A),
-	.DRAM_LDQM(SDRAM_DQML),
-	.DRAM_UDQM(SDRAM_DQMH),
-	.DRAM_WE_N(SDRAM_nWE),
-	.DRAM_CS_N(SDRAM_nCS),
-	.DRAM_RAS_N(SDRAM_nRAS),
-	.DRAM_CAS_N(SDRAM_nCAS),
-	.DRAM_BA_0(SDRAM_BA[0]),
-	.DRAM_BA_1(SDRAM_BA[1])
+	.DRAM_CLK(module_sel ? SDRAM2_CLK : SDRAM_CLK),
+	.DRAM_DQ(module_sel ? SDRAM2_DQ : SDRAM_DQ),
+	.DRAM_ADDR(module_sel ? SDRAM2_A : SDRAM_A),
+	.DRAM_LDQM(module_sel ? 1'b0 : SDRAM_DQML),
+	.DRAM_UDQM(module_sel ? 1'b0 : SDRAM_DQMH),
+	.DRAM_WE_N(module_sel ? SDRAM2_nWE : SDRAM_nWE),
+	.DRAM_CS_N(module_sel ? SDRAM2_nCS : SDRAM_nCS),
+	.DRAM_RAS_N(module_sel ? SDRAM2_nRAS : SDRAM_nRAS),
+	.DRAM_CAS_N(module_sel ? SDRAM2_nCAS : SDRAM_nCAS),
+	.DRAM_BA_0(module_sel ? SDRAM2_BA[0] : SDRAM_BA[0]),
+	.DRAM_BA_1(module_sel ? SDRAM2_BA[1] : SDRAM_BA[1])
 );
 
 
